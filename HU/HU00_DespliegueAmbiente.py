@@ -8,7 +8,12 @@ import traceback
 from Funciones.Database import db
 
 class Reutilizables:
-    """Clase para manejo de ambiente y logging del proyecto"""
+    """
+    Clase para manejo de ambiente, configuración y logging del proyecto RPA NEON.
+    
+    Gestiona la creación de estructura de carpetas, configuración de logs,
+    auditoría de operaciones y limpieza de archivos temporales.
+    """
     
     def __init__(self, path_proyecto, path_audit, path_logs, path_temp, path_insumo, path_resultado):
         self.path_proyecto = Path(path_proyecto)
@@ -22,6 +27,21 @@ class Reutilizables:
         self._configurar_logger()
     
     def _configurar_logger(self):
+        """
+        Configura el sistema de logging para la aplicación RPA.
+        Crea y configura un logger que registra eventos en un archivo de texto y en la consola.
+        El archivo de log se genera en la carpeta de logs con un nombre que incluye la máquina,
+        el usuario y la fecha actual.
+        La configuración del logger incluye:
+        - Nivel de registro: INFO
+        - Formato personalizado: Timestamp | Nivel | Mensaje | Código Robot | Nombre de Función
+        - Encoding UTF-8 para soportar caracteres especiales
+        - Dos manejadores: FileHandler (archivo) y StreamHandler (consola)
+        Atributos creados:
+            self.logger: Instancia del logger configurada para la clase
+        Raises:
+            OSError: Si no se puede crear la carpeta de logs o el archivo de log
+        """
         """Configura el sistema de logging"""
         # Crear carpeta de logs si no existe
         self.path_logs.mkdir(parents=True, exist_ok=True)
