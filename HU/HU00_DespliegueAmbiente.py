@@ -8,7 +8,12 @@ import traceback
 from Funciones.Database import db
 
 class Reutilizables:
-    """Clase para manejo de ambiente y logging del proyecto"""
+    """
+    Clase para manejo de ambiente, configuración y logging del proyecto RPA NEON.
+    
+    Gestiona la creación de estructura de carpetas, configuración de logs,
+    auditoría de operaciones y limpieza de archivos temporales.
+    """
     
     def __init__(self, path_proyecto, path_audit, path_logs, path_temp, path_insumo, path_resultado):
         self.path_proyecto = Path(path_proyecto)
