@@ -15,7 +15,7 @@ class Reutilizables:
     auditoría de operaciones y limpieza de archivos temporales.
     """
     
-    def __init__(self, path_proyecto, path_audit, path_logs, path_temp, path_insumo, path_resultado):
+    def __init__(self, path_proyecto, path_audit, path_logs, path_temp, path_insumo, path_resultado, schema):
         self.path_proyecto = Path(path_proyecto)
         self.path_audit = Path(path_audit)
         self.path_logs = Path(path_logs)
@@ -23,8 +23,12 @@ class Reutilizables:
         self.path_insumo = Path(path_insumo)
         self.path_resultado = Path(path_resultado)
         
+        # Schema del proyecto
+        self.schema = schema
+
         # Configurar logger
         self._configurar_logger()
+
     
     def _configurar_logger(self):
         """
@@ -89,19 +93,8 @@ class Reutilizables:
             return True
             
         except Exception as e:
-            self.logger.error(f"Error al crear carpetas: {str(e)}", exc_info=True)
+            self.logger.exception(f"Error al crear carpetas: ", exc_info=True)
             return False
-    
-    def audit_log(self, mensaje, tipo='INFO'):
-        """Log de auditoría"""
-        if tipo == 'INFO':
-            self.logger.info(mensaje)
-        elif tipo == 'WARNING':
-            self.logger.warning(mensaje)
-        elif tipo == 'ERROR':
-            self.logger.error(mensaje)
-        elif tipo == 'DEBUG':
-            self.logger.debug(mensaje)
     
     def limpiar_carpeta_temp(self):
         """Limpia archivos temporales"""
@@ -122,10 +115,10 @@ class Reutilizables:
     def get_config(self):
         """Obtiene configuración desde base de datos"""
         try:
-            query = "SELECT clave, valor FROM Configuracion"
+            query = f"SELECT Nombre, Valor FROM {self.schema}.Parametros"
             self.logger.debug("Ejecutando consulta para obtener configuración")
             resultado = db.fetch_all(query)
-            config = {fila['clave']: fila['valor'] for fila in resultado}
+            config = {fila['Nombre']: fila['Valor'] for fila in resultado}
             self.logger.info("Configuración obtenida exitosamente")
             return config
         except Exception as e:
